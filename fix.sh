@@ -1,3 +1,23 @@
+#!/bin/bash
+set -e
+
+echo "→ Removing old services..."
+rm -rf services/form-service
+rm -rf services/submission-service
+
+echo "→ Creating new services..."
+mkdir -p services/document-service
+mkdir -p services/classifier-service
+mkdir -p services/extraction-service
+mkdir -p services/guidance-service
+
+touch services/document-service/.gitkeep
+touch services/classifier-service/.gitkeep
+touch services/extraction-service/.gitkeep
+touch services/guidance-service/.gitkeep
+
+echo "→ Rewriting parent pom.xml..."
+cat > pom.xml << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -129,3 +149,31 @@
     </pluginRepositories>
 
 </project>
+EOF
+
+echo "→ Staging all changes..."
+git add .
+
+echo "→ Committing..."
+git commit -m "chore: restructure services for document processing pipeline
+
+- Remove: form-service, submission-service
+- Add: document-service, classifier-service, extraction-service, guidance-service
+- Update parent POM modules to match new architecture"
+
+echo "→ Pushing to dev..."
+git push origin dev
+
+echo ""
+echo "✓ Done. Repo is up to date on dev branch."
+echo ""
+echo "New service structure:"
+echo "  services/api-gateway"
+echo "  services/auth-service"
+echo "  services/document-service     ← build next"
+echo "  services/classifier-service"
+echo "  services/extraction-service"
+echo "  services/guidance-service"
+echo "  services/notification-service"
+echo "  services/analytics-service"
+echo "  services/billing-service"
