@@ -59,7 +59,7 @@ public class DocumentService {
                 .status(DocumentStatus.RECEIVED)
                 .build();
 
-        documentRepository.save(document);
+        document = documentRepository.save(document);
         log.info("Document saved id={} tenant={}", documentId, tenantId);
 
         // 3. Fire event → classifier service picks this up next
