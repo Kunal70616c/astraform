@@ -1,0 +1,57 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: classifier-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/astraform_classifier
+    username: astraform
+    password: astraform123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:your-openai-api-key-here}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.1   # low = deterministic classification
+
+minio:
+  endpoint: http://localhost:9000
+  access-key: astraform
+  secret-key: astraform123
+  bucket-name: astraform-documents
+
+eureka:
+  client:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.astraform: DEBUG
